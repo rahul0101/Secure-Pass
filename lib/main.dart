@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'homepage.dart';
+import 'NewPin.dart';
+import 'Home.dart';
+import 'CheckPin.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +15,9 @@ class MyApp extends StatelessWidget {
       title: 'Phone Authentication',
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/homepage': (BuildContext context) => DashboardPage(),
+        '/newpin': (BuildContext context) => NewPin(),
+        '/checkpin': (BuildContext context) => CheckPin(),
+        '/homepage': (BuildContext context) => Passwords(),
         '/loginpage': (BuildContext context) => MyApp(),
       },
       theme: ThemeData(
@@ -37,6 +42,7 @@ class _MyAppPageState extends State<MyAppPage> {
   String verificationId;
   String errorMessage = '';
   FirebaseAuth _auth = FirebaseAuth.instance;
+  final databaseReference = Firestore.instance;
 
   Future<void> verifyPhone() async {
     final PhoneCodeSent smsOTPSent = (String verId, [int forceCodeResend]) {
@@ -97,9 +103,10 @@ class _MyAppPageState extends State<MyAppPage> {
                 onPressed: () {
                   _auth.currentUser().then((user) {
                     if (user != null) {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushReplacementNamed('/homepage');
+                      print('check');
+                      check(user);
                     } else {
+                      print('signIn');
                       signIn();
                     }
                   });
@@ -108,6 +115,26 @@ class _MyAppPageState extends State<MyAppPage> {
             ],
           );
         });
+  }
+
+  check(FirebaseUser user) async{
+    Navigator.of(context).pop();
+    String x = user.phoneNumber;
+    print(x);
+  
+    final flag = await databaseReference.collection("pins").document(x).get();
+    if(flag.exists)
+    {
+      //Navigator.of(context).pushReplacementNamed('/checkpin');
+      print('flag exists');
+      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>CheckPin()));
+    }
+    else
+    {
+      print("flag doesn't exist");
+      //Navigator.of(context).pushReplacementNamed('/newpin');
+      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>NewPin()));
+    }
   }
 
   signIn() async {
