@@ -26,6 +26,7 @@ class _NewPinCheckState extends State<NewPinCheck> {
               {
                 _auth.currentUser().then((user) {
                   databaseReference.collection("pins").document(user.phoneNumber).setData({'pin' : pin});
+                  databaseReference.collection("passwords").document(user.phoneNumber).setData({'misc' : 'misc'});
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   //print(user.phoneNumber);
