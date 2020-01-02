@@ -9,8 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -119,23 +117,22 @@ class _MyAppPageState extends State<MyAppPage> {
         });
   }
 
-  check(FirebaseUser user) async{
+  check(FirebaseUser user) async {
     Navigator.of(context).pop();
     String x = user.phoneNumber;
     print(x);
-  
+
     final flag = await databaseReference.collection("pins").document(x).get();
-    if(flag.exists)
-    {
+    if (flag.exists) {
       //Navigator.of(context).pushReplacementNamed('/checkpin');
       print('flag exists');
-      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>CheckPin()));
-    }
-    else
-    {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => CheckPin()));
+    } else {
       print("flag doesn't exist");
       //Navigator.of(context).pushReplacementNamed('/newpin');
-      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>NewPin()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => NewPin()));
     }
   }
 
@@ -145,7 +142,8 @@ class _MyAppPageState extends State<MyAppPage> {
         verificationId: verificationId,
         smsCode: smsOTP,
       );
-      final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+      final FirebaseUser user =
+          (await _auth.signInWithCredential(credential)).user;
       final FirebaseUser currentUser = await _auth.currentUser();
       assert(user.uid == currentUser.uid);
       Navigator.of(context).pop();
