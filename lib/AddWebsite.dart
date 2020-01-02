@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'Home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class AddWebsite extends StatelessWidget {
 //String WebsiteName;
 //String Password;
 //String ConfirmPassword;
 var WebsiteNames;
+FirebaseAuth _auth = FirebaseAuth.instance;
+final databaseReference = Firestore.instance;
+
+
 
 AddWebsite(this.WebsiteNames);
-
 // Within the SecondRoute widget
 
+  someMethod() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    print(user.uid);
+    databaseReference.collection("passwords").document(
+        user.phoneNumber).
+    updateData({WebsiteNameController.text: PasswordController.text
+    });
+  }
 
 final WebsiteNameController=TextEditingController();
 final PasswordController=TextEditingController();
@@ -53,6 +66,8 @@ final ConfirmPasswordsController=TextEditingController();
                  // Within the SecondRoute widget
                  onPressed: () {
                     WebsiteNames.add(WebsiteNameController.text);
+                    someMethod();
+
                    Navigator.pop(context,true);
                  },
                elevation: 5,

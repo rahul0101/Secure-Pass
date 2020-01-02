@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ViewWebSite extends StatelessWidget {
 final String WebSiteName;
+final String Password;
 final List<String> WebsiteNames;
 
 
-ViewWebSite(this.WebSiteName,this.WebsiteNames);
+ViewWebSite(this.WebSiteName,this.WebsiteNames,this.Password);
   @override
+
   Widget build(BuildContext context) {
     return MaterialApp(home:Scaffold(
       appBar: AppBar(backgroundColor: Colors.black87,title:Text('AddWebsite'),
@@ -28,7 +32,7 @@ ViewWebSite(this.WebSiteName,this.WebsiteNames);
 
                 margin: EdgeInsets.all(10),
                 elevation: 5,
-                child:Text("sandeep",style: TextStyle(color: Colors.green) ,
+                child:Text(Password,style: TextStyle(color: Colors.green) ,
                   textScaleFactor: 2.5,textAlign: TextAlign.center,
 
                 )
@@ -38,10 +42,17 @@ ViewWebSite(this.WebSiteName,this.WebsiteNames);
       RaisedButton(child:Text('delete'),
         // Within the SecondRoute widget
         onPressed: () {
-          WebsiteNames.remove(WebSiteName);
+          try {
+            Firestore.instance.collection('passwords').document('+919740167142').updateData({WebSiteName: FieldValue.delete()}).whenComplete((){
+              print('Field Deleted');
+            });
+            Navigator.pop(context,true
+            );
+          } catch (e) {
+            print(e.toString());
+          }
 
-          Navigator.pop(context,true
-         );
+
         },),
 
                 RaisedButton(child:Text('edit'),
