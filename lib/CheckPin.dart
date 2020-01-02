@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:secure_pass/Home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:steel_crypt/steel_crypt.dart';
 import 'PinEntry.dart';
 
 class CheckPin extends StatefulWidget {
@@ -24,31 +26,39 @@ class _CheckPinState extends State<CheckPin> {
       ),
     );
 
+    _checkPin(String x, String pin) async
+    {
+      final prefs = await SharedPreferences.getInstance(); 
+      String key = prefs.getString('key');
+      String iv = prefs.getString('iv');
+      var encrypter = AesCrypt(key, 'cbc', 'iso10126-2');
+      String result = encrypter.decrypt(x, iv);
+      if(result == pin)
+      {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Passwords()));
+      }
+      else
+      {
+        showDialog(
+          context: context,
+          builder: (context){
+            return AlertDialog(
+              title: Text("Pin"),
+              content: Text('Incorrect pin!'),
+            );
+          }
+        );
+      }
+    }
+
     final pinbox = PinEntryTextField(
             onSubmit: (String pin){
               _auth.currentUser().then((user) {
                 print(user.phoneNumber);
                 Firestore.instance.collection('pins').document(user.phoneNumber).get().then((document){
-                  //print(document.data);
-                  final x = document.data['pin'].toString();
-                  //print(x + '   ' + pin);
-                  if(x == pin)
-                  {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Passwords()));
-                  }
-                  else
-                  {
-                    showDialog(
-                      context: context,
-                      builder: (context){
-                        return AlertDialog(
-                          title: Text("Pin"),
-                          content: Text('Incorrect pin!'),
-                        );
-                      }
-                    );
-                  }
+                  final val = document.data['pin'].toString();
+                  _checkPin(val, pin);
                 });
               }); //end showDialog()
 
