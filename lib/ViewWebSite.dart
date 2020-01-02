@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import './ChangePassword.dart';
 
 class ViewWebSite extends StatelessWidget {
   final String WebSiteName;
@@ -65,7 +66,12 @@ class ViewWebSite extends StatelessWidget {
               child: Text('edit'),
               // Within the SecondRoute widget
               onPressed: () {
-                null;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return ChangePassword(WebSiteName);
+                  }),
+                );
               },
             ),
           ],
