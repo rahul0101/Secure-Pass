@@ -69,7 +69,7 @@ class ChangePassword extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return Passwords();
+                    return Passwords(userPhone: this.userPhone,);
                   }),
                 );
               },

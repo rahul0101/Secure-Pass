@@ -38,7 +38,11 @@ class PasswordsState extends State<Passwords> {
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (!snapshot.hasData) {
                 print("no data");
-                return new Text('Loading...');
+                return new Center(
+              child:CircularProgressIndicator(
+                backgroundColor: Colors.blue,
+              )
+                );
               }
               return new ListView(
                 children: (snapshot.data.data.keys).map((answer) {
