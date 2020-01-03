@@ -13,24 +13,48 @@ class NewPin extends StatefulWidget {
 class _NewPinState extends State<NewPin> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PinEntryTextField(
+    final header = RichText(
+      text: TextSpan(
+        text: 'Enter PIN' ,style: TextStyle(color: Colors.black, fontSize: 24),
+      ),
+    );
+
+    final pinbox = PinEntryTextField(
             onSubmit: (String pin){
               Navigator.of(context).push(MaterialPageRoute(builder:(context)=>NewPinCheck(prevpin:pin)));
-              /*
-              showDialog(
-                context: context,
-                builder: (context){
-                  return AlertDialog(
-                    title: Text("Pin"),
-                    content: Text('Pin entered is $pin'),
-                  );
-                }
-              ); //end showDialog()
-              */
             }, // end onSubmit
+          );
+
+    return Scaffold(
+      body: Center(
+        child: Container(
+          child: Padding(
+            padding: const EdgeInsets.all(36.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 8.0,
+                ),
+                header,
+                SizedBox(
+                  height: 48.0,
+                ),
+                pinbox,
+                SizedBox(
+                  height: 32.0,
+                )
+              ],
+            ),
           ),
+        ),
+      )
     );
   }
 
 }
+
+/*
+
+          */
