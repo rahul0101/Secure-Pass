@@ -51,7 +51,7 @@ class _NewPinCheckState extends State<NewPinCheck> {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   //print(user.phoneNumber);
-                  Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Passwords()));
+                  Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Passwords(userPhone: user.phoneNumber)));
                   
                 });
               }

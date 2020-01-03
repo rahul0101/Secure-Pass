@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import './ChangePassword.dart';
 
 class ViewWebSite extends StatelessWidget {
-  final String WebSiteName;
-  final String Password;
-  final List<String> WebsiteNames;
+  final String webSiteName;
+  final String password;
+  final userPhone;
 
-  ViewWebSite(this.WebSiteName, this.WebsiteNames, this.Password);
+  ViewWebSite(this.webSiteName, this.password, this.userPhone);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,7 +26,7 @@ class ViewWebSite extends StatelessWidget {
               child: Card(
                 elevation: 5,
                 child: Text(
-                  "PassWord",
+                  "Password",
                   style: TextStyle(color: Colors.green),
                   textScaleFactor: 2.5,
                   textAlign: TextAlign.center,
@@ -39,7 +39,7 @@ class ViewWebSite extends StatelessWidget {
                     margin: EdgeInsets.all(10),
                     elevation: 5,
                     child: Text(
-                      Password,
+                      password,
                       style: TextStyle(color: Colors.green),
                       textScaleFactor: 2.5,
                       textAlign: TextAlign.center,
@@ -51,9 +51,9 @@ class ViewWebSite extends StatelessWidget {
                 try {
                   Firestore.instance
                       .collection('passwords')
-                      .document('+919740167142')
+                      .document(userPhone)
                       .updateData(
-                          {WebSiteName: FieldValue.delete()}).whenComplete(() {
+                          {webSiteName: FieldValue.delete()}).whenComplete(() {
                     print('Field Deleted');
                   });
                   Navigator.pop(context, true);
@@ -69,7 +69,7 @@ class ViewWebSite extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return ChangePassword(WebSiteName);
+                    return ChangePassword(webSiteName, userPhone);
                   }),
                 );
               },

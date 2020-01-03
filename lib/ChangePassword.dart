@@ -4,29 +4,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import './Home.dart';
 
 class ChangePassword extends StatelessWidget {
-//String WebsiteName;
-//String Password;
-//String ConfirmPassword;
-  final String WebsiteName;
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final String websiteName;
+  final String userPhone;
   final databaseReference = Firestore.instance;
 
-  ChangePassword(this.WebsiteName);
+  ChangePassword(this.websiteName, this.userPhone);
 // Within the SecondRoute widget
 
-  _getUserId() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    print(user.uid);
+  _getUserId() {
     databaseReference
         .collection("passwords")
-        .document(user.phoneNumber)
-        .updateData({WebsiteName: PasswordController.text});
+        .document(userPhone)
+        .updateData({websiteName: passwordController.text});
   }
 
-  final WebsiteNameController = TextEditingController();
-  final PasswordController = TextEditingController();
-  final ConfirmPasswordsController = TextEditingController();
+  final websiteNameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordsController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,7 +45,7 @@ class ChangePassword extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(labelText: ' password'),
                         //onChanged: (val){Password=val;},
-                        controller: PasswordController,
+                        controller: passwordController,
                       ),
                     ),
                     Card(
@@ -60,7 +54,7 @@ class ChangePassword extends StatelessWidget {
                         decoration:
                         InputDecoration(labelText: ' ConfirmPassword'),
                         //  onChanged:(val){ConfirmPassword=val;},
-                        controller: ConfirmPasswordsController,
+                        controller: confirmPasswordsController,
                       ),
                     )
                   ],

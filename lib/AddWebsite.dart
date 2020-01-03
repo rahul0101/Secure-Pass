@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
-import 'Home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AddWebsite extends StatelessWidget {
-//String WebsiteName;
-//String Password;
-//String ConfirmPassword;
-  var WebsiteNames;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final userPhone;
   final databaseReference = Firestore.instance;
 
-  AddWebsite(this.WebsiteNames);
+  AddWebsite(this.userPhone);
 // Within the SecondRoute widget
 
-  _getUserId() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    print(user.uid);
+  _getUserId() {
     databaseReference
         .collection("passwords")
-        .document(user.phoneNumber)
-        .updateData({WebsiteNameController.text: PasswordController.text});
+        .document(userPhone)
+        .updateData({websiteNameController.text: passwordController.text});
   }
 
-  final WebsiteNameController = TextEditingController();
-  final PasswordController = TextEditingController();
-  final ConfirmPasswordsController = TextEditingController();
+  final websiteNameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordsController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,7 +42,7 @@ class AddWebsite extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(labelText: ' WebsiteName'),
                         // onChanged: (val){WebsiteName=val;},
-                        controller: WebsiteNameController,
+                        controller: websiteNameController,
                       ),
                     ),
                     Card(
@@ -57,7 +50,7 @@ class AddWebsite extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(labelText: ' password'),
                         //onChanged: (val){Password=val;},
-                        controller: PasswordController,
+                        controller: passwordController,
                       ),
                     ),
                     Card(
@@ -66,7 +59,7 @@ class AddWebsite extends StatelessWidget {
                         decoration:
                             InputDecoration(labelText: ' ConfirmPassword'),
                         //  onChanged:(val){ConfirmPassword=val;},
-                        controller: ConfirmPasswordsController,
+                        controller: confirmPasswordsController,
                       ),
                     )
                   ],
@@ -75,9 +68,7 @@ class AddWebsite extends StatelessWidget {
               child: Text('Create'),
               // Within the SecondRoute widget
               onPressed: () {
-                WebsiteNames.add(WebsiteNameController.text);
                 _getUserId();
-
                 Navigator.pop(context, true);
               },
               elevation: 5,

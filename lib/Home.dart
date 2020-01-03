@@ -1,37 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import './ViewWebSite.dart';
 import './AddWebsite.dart';
 
 class Passwords extends StatefulWidget {
-  List<String> WebsiteNames = [""];
+  Passwords({Key key, this.userPhone}) : super(key: key);
+  final String userPhone;
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return PasswordsState();
-  }
+  State<StatefulWidget> createState() {return PasswordsState();}
 }
 
 class PasswordsState extends State<Passwords> {
-  FirebaseUser User;
 
-  List<String> WebsiteNames = [];
-
-  void _Userid() async {
-    User = await FirebaseAuth.instance.currentUser();
-  }
-
-  void _deletePassword() async {
+  void _refresh() async {
     setState(() {});
   }
 
   final databaseReference = Firestore.instance;
-
-  void initState() {
-    _Userid();
-  }
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,7 +32,7 @@ class PasswordsState extends State<Passwords> {
         body: new StreamBuilder<DocumentSnapshot>(
             stream: Firestore.instance
                 .collection('passwords')
-                .document('+919740167142')
+                .document(widget.userPhone)
                 .snapshots(includeMetadataChanges: false),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -54,7 +40,6 @@ class PasswordsState extends State<Passwords> {
                 print("no data");
                 return new Text('Loading...');
               }
-              print(snapshot.data.data['sandeep']);
               return new ListView(
                 children: (snapshot.data.data.keys).map((answer) {
                   return Container(
@@ -69,10 +54,9 @@ class PasswordsState extends State<Passwords> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
-                                  return ViewWebSite(answer, WebsiteNames,
-                                      snapshot.data.data[answer]);
+                                  return ViewWebSite(answer, snapshot.data.data[answer], widget.userPhone);
                                 }),
-                              ).then((val) => val ? _deletePassword() : null);
+                              ).then((val) => val ? _refresh() : null);
                             },
                             title: Text(answer,
                                 style: TextStyle(color: Colors.greenAccent),
@@ -88,9 +72,9 @@ class PasswordsState extends State<Passwords> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
-                return AddWebsite(WebsiteNames);
+                return AddWebsite(widget.userPhone);
               }),
-            ).then((val) => val ? _deletePassword() : null);
+            ).then((val) => val ? _refresh() : null);
           },
 
           tooltip: 'Increment',

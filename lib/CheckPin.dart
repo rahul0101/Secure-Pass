@@ -26,7 +26,7 @@ class _CheckPinState extends State<CheckPin> {
       ),
     );
 
-    _checkPin(String x, String pin) async
+    _checkPin(String x, String pin, String phone) async
     {
       final prefs = await SharedPreferences.getInstance(); 
       String key = prefs.getString('key');
@@ -36,7 +36,7 @@ class _CheckPinState extends State<CheckPin> {
       if(result == pin)
       {
         Navigator.of(context).pop();
-        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Passwords()));
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>Passwords(userPhone: phone)));
       }
       else
       {
@@ -55,10 +55,10 @@ class _CheckPinState extends State<CheckPin> {
     final pinbox = PinEntryTextField(
             onSubmit: (String pin){
               _auth.currentUser().then((user) {
-                print(user.phoneNumber);
+                print('u' + user.phoneNumber);
                 Firestore.instance.collection('pins').document(user.phoneNumber).get().then((document){
                   final val = document.data['pin'].toString();
-                  _checkPin(val, pin);
+                  _checkPin(val, pin, user.phoneNumber);
                 });
               }); //end showDialog()
 
