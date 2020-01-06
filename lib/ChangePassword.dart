@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:steel_crypt/steel_crypt.dart';
 import './Home.dart';
 
 class ChangePassword extends StatelessWidget {
@@ -11,11 +13,14 @@ class ChangePassword extends StatelessWidget {
   ChangePassword(this.websiteName, this.userPhone);
 // Within the SecondRoute widget
 
-  _getUserId() {
+  _updatePassword() async {
+    final prefs = await SharedPreferences.getInstance();
+    var encrypter = AesCrypt(prefs.getString('key'), 'cbc', 'iso10126-2');
+    String encr = encrypter.encrypt(passwordController.text,prefs.getString('iv'));
     databaseReference
         .collection("passwords")
         .document(userPhone)
-        .updateData({websiteName: passwordController.text});
+        .updateData({websiteName: encr});
   }
 
   final websiteNameController = TextEditingController();
@@ -64,7 +69,7 @@ class ChangePassword extends StatelessWidget {
               // Within the SecondRoute widget
               onPressed: () {
 
-                _getUserId();
+                _updatePassword();
 
                 Navigator.push(
                   context,

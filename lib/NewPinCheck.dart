@@ -44,10 +44,9 @@ class _NewPinCheckState extends State<NewPinCheck> {
                   _storeKey(key, ivsalt);
                   var encrypter = AesCrypt(key, 'cbc', 'iso10126-2');
                   String encr = encrypter.encrypt(pin,ivsalt);
-                  print(encr);
-                  print('abc');
                   databaseReference.collection("pins").document(user.phoneNumber).setData({'pin' : encr});
                   databaseReference.collection("passwords").document(user.phoneNumber).setData({'misc' : 'misc'});
+                  databaseReference.collection('passwords').document(user.phoneNumber).updateData({'misc': FieldValue.delete()});
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   //print(user.phoneNumber);

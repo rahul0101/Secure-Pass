@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:steel_crypt/steel_crypt.dart';
 import './ViewWebSite.dart';
 import './AddWebsite.dart';
 
@@ -54,11 +56,16 @@ class PasswordsState extends State<Passwords> {
                           color: Colors.black87,
                           elevation: 5,
                           child: ListTile(
-                            onTap: () {
+                            onTap: () async {
+                              final prefs = await SharedPreferences.getInstance();
+                              String key = prefs.getString('key');
+                              String iv = prefs.getString('iv');
+                              var decrypter = AesCrypt(key, 'cbc', 'iso10126-2');
+                              String passw = decrypter.decrypt(snapshot.data.data[answer], iv);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
-                                  return ViewWebSite(answer, snapshot.data.data[answer], widget.userPhone);
+                                  return ViewWebSite(answer, passw, widget.userPhone);
                                 }),
                               ).then((val) => val ? _refresh() : null);
                             },

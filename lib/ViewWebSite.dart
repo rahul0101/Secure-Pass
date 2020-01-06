@@ -54,7 +54,7 @@ class ViewWebSite extends StatelessWidget {
                       .document(userPhone)
                       .updateData(
                           {webSiteName: FieldValue.delete()}).whenComplete(() {
-                    print('Field Deleted');
+                    //print('Field Deleted');
                   });
                   Navigator.pop(context, true);
                 } catch (e) {
